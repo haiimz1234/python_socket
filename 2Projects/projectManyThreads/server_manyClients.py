@@ -35,12 +35,16 @@ class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
         global DebugFlag
         global globalLogging
         global dir_path
-        if (DebugFlag & 3) > 0:  # 1 or 2
+        if (DebugFlag & 3) > 0 :  # 1 or 2
             if (DebugFlag & 1) == 1:  # global logginh
-                globalLogging.error(message)# "error: " + VErr.message)
+				if (Opt==0):
+					globalLogging.error(message)# "error: " + VErr.message)
             else:  # ==2
                 # private logging
-                logfile.Local_logger(self.client_address[0], dir_path + self.client_address[0]+".log", logging.ERROR,message)
+                if (Opt ==2):
+					logfile.Local_logger(self.client_address[0], dir_path + self.client_address[0]+".log", logging.INFO,message)
+                else:
+					logfile.Local_logger(self.client_address[0], dir_path + self.client_address[0]+".log", logging.ERROR,message)
 
     def handle(self):
         global StopServer
@@ -49,10 +53,11 @@ class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
         global globalLogging
         try:
             data = self.request.recv(1024)
+            self.MYErrorMessage(2,"data="+data)
             JsonP = json.loads(data)
             command=JsonP["comm"]
             item=JsonP["item"]
-
+			
         except ValueError as VErr:
             if (DebugFlag&3) > 0 : # 1 or 2
 

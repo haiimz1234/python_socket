@@ -1,18 +1,29 @@
 import logging
 import logging.config
-formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+import threading
+formatter = logging.Formatter('%(asctime)s %(threadName)-9s) %(levelname)s %(message)s')
 
 
-def Setup_MyGlobal_logger(name, log_file, level=logging.ERROR):
-    """Function setup as many loggers as you want"""
-    global formatter
-    handler = logging.FileHandler(log_file)
-    handler.setFormatter(formatter)
+class Setup_MyGlobal_logger:
+    def __init__(self,name, log_file, level=logging.ERROR) :
+        self.lock = threading.Lock()
 
-    logger = logging.getLogger(name)
-    logger.setLevel(level)
-    logger.addHandler(handler)
-    return logger
+  #  def Setup_MyGlobal_logger(name, log_file, level=logging.ERROR):
+        """Function setup as many loggers as you want"""
+        global formatter
+        handler = logging.FileHandler(log_file)
+        handler.setFormatter(formatter)
+
+        self.logger = logging.getLogger(name)
+        self.logger.setLevel(level)
+        self.logger.addHandler(handler)
+#        return logger
+    def error(self,message):
+        self.lock.acquire()
+        try:
+            self.logger.error(message)
+        finally:
+            self.lock.release()
 
 def Local_logger(name, log_file, level,message):
     """Function write message to specil file"""

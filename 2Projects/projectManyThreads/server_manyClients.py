@@ -7,7 +7,9 @@ import sys
 import os
 import logfile
 dir_path = os.path.dirname(os.path.realpath(__file__))+'/'
-itemList=[]  # SAFE FOR ATOMIC FUNCTIONS IN THREAD  NOT NEED TO ADD LOCK MECHANIZIM
+
+import stack
+itemList=stack.Stack()  # SAFE FOR ATOMIC FUNCTIONS IN THREAD  NOT NEED TO ADD LOCK MECHANIZIM
 
 """
 
@@ -57,7 +59,8 @@ class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
             JsonP = json.loads(data)
             command=JsonP["comm"]
             item=JsonP["item"]
-			
+            self.MYErrorMessage(0, "EQQQQQQQQQQQQQ error")
+
         except ValueError as VErr:
             if (DebugFlag&3) > 0 : # 1 or 2
 
@@ -77,7 +80,7 @@ class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
                 pass
                 # add to stack
             elif   (command == 'DEC'):
-                if(len(itemList) <= 0):
+                if(itemList.size() <= 0):
                     msgback = "ERROR : no items"  #
                     self.MYErrorMessage(0, msgback)
                 else:

@@ -27,7 +27,7 @@ def client(ip, port):
     action = "DEC"
     val = " "
     if (comm == '1'):
-        val = raw_input("Give string as item")
+        val = raw_input("Give string as item: ")
         if (len(val) > 20) :
             val=val[:19]
             print val

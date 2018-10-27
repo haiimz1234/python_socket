@@ -59,7 +59,7 @@ class ThreadedTCPRequestHandler(SocketServer.BaseRequestHandler):
             JsonP = json.loads(data)
             command=JsonP["comm"]
             item=JsonP["item"]
-            self.MYErrorMessage(0, "EQQQQQQQQQQQQQ error")
+
 
         except ValueError as VErr:
             if (DebugFlag&3) > 0 : # 1 or 2
